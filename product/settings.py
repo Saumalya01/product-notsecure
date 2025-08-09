@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,18 +69,11 @@ WSGI_APPLICATION = 'notsecure.wsgi.app'
 
 # Database configuration
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # Default database name
-        'USER': 'postgres',  # Database user
-        'PASSWORD': '@NotExist_22',  # Get this from Project Settings → Database
-        'HOST': 'db.kjqedetuxrvqamzknsnb.supabase.co',
-        'PORT': '5432',
-        'OPTIONS': {
-            'sslmode': 'require',  # Supabase requires SSL
-            'options': '-c search_path=public'  # Explicitly set schema
-        },
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('POSTGRES_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
